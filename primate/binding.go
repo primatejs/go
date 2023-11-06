@@ -25,8 +25,6 @@ type URL struct {
 
 type Request struct {
   Url URL
-  View t_view
-  Redirect t_redirect
 }
 
 func make_url(request js.Value) URL {
@@ -58,21 +56,31 @@ func make_view(request js.Value) t_view {
   }
 }
 
-func make_redirect(request js.Value) t_redirect {
-  redirect := request.Get("redirect")
-
-  return func(location string, options map[string]interface{}) interface{} {
-    return redirect.Invoke(location, options);
-  }
+func Redirect(location string, options map[string]interface{}) interface{} {
+  return js.FuncOf(func(this js.Value, args[] js.Value) interface{} {
+    return map[string]interface{}{
+      "handler": "redirect",
+      "options": options,
+    }
+  });
 }
+
+func View(component string, props map[string]interface{}) interface{} {
+  return js.FuncOf(func(this js.Value, args[] js.Value) interface{} {
+    return map[string]interface{}{
+      "handler": "view",
+      "component": component,
+      "props": props,
+    }
+  });
+}
+
  
 func MakeRequest(route t_request) t_response {
   return func(this js.Value, args[] js.Value) interface{} {
     request := args[0];
     go_request := Request{
       make_url(request),
-      make_view(request),
-      make_redirect(request),
     }
 
     return route(go_request)

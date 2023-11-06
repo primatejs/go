@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@primate/binding": "file:../../primate/packages/binding",
+    "rcompat": "^0.2.0"
+  },
+  "type": "module"
+}
