@@ -60,6 +60,7 @@ func Redirect(location string, options map[string]interface{}) interface{} {
   return js.FuncOf(func(this js.Value, args[] js.Value) interface{} {
     return map[string]interface{}{
       "handler": "redirect",
+      "location": location,
       "options": options,
     }
   });
