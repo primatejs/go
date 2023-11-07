@@ -23,8 +23,18 @@ type URL struct {
   Hash string
 }
 
+type Dispatchable struct {
+  Get func(string) string
+  GetAll func() map[string]interface{}
+}
+
 type Request struct {
   Url URL
+  Body Dispatchable
+  Path Dispatchable
+  Query Dispatchable
+  Cookies Dispatchable
+  Headers Dispatchable
 }
 
 func make_url(request js.Value) URL {
@@ -48,11 +58,17 @@ func make_url(request js.Value) URL {
   }
 }
 
-func make_view(request js.Value) t_view {
-  view := request.Get("view")
+func make_dispatchable(key string, request js.Value) Dispatchable {
+  properties := make(map[string]interface{})
+  json.Unmarshal([]byte(request.Get(key).String()), &properties)
 
-  return func(component string, props map[string]interface{}) interface{} {
-    return view.Invoke(component, props);
+  return Dispatchable{
+    func(property string) string {
+      return properties[property].(string)
+    },
+    func() map[string]interface{} {
+      return properties
+    },
   }
 }
 
@@ -82,6 +98,11 @@ func MakeRequest(route t_request) t_response {
     request := args[0];
     go_request := Request{
       make_url(request),
+      make_dispatchable("body", request),
+      make_dispatchable("path", request),
+      make_dispatchable("query", request),
+      make_dispatchable("cookies", request),
+      make_dispatchable("headers", request),
     }
 
     return route(go_request)

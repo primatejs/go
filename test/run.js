@@ -9,6 +9,21 @@ const { directory } = cwd;
 const file = await directory.join("route.wasm").arrayBuffer();
 const typedArray = new Uint8Array(file);
 
+const getter = {
+  get() {
+    return {foo: "bar"};
+  }
+}
+
+const fake_request = request => ({
+  url: new URL(request.url),
+  body: getter,
+  path: getter,
+  query: getter,
+  cookies: getter,
+  headers: getter,
+});
+
 const go = new globalThis.Go();
 await WebAssembly.instantiate(typedArray, {
   ...go.importObject,
@@ -16,9 +31,9 @@ await WebAssembly.instantiate(typedArray, {
     go.run(result.instance);
   serve(request => {
     const get = globalThis.Get;
-    const response = make_response(get(make_request({ url: new URL(request.url) })));
-    console.log(response);
+    const response = make_response(get(make_request(fake_request(request))));
     //const $response = typeof response === "object" ? JSON.stringify(response) : response;
-    return new Response("11");
+    console.log(response);
+    return new Response(response);
   }, {host: "0.0.0.0", port: 6161});
 });
