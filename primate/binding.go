@@ -38,9 +38,9 @@ type Request struct {
 }
 
 func make_url(request js.Value) URL {
-  url := request.Get("url")
-  search_params := make(map[string]interface{})
-  json.Unmarshal([]byte(request.Get("search_params").String()), &search_params)
+  url := request.Get("url");
+  search_params := make(map[string]interface{});
+  json.Unmarshal([]byte(request.Get("search_params").String()), &search_params);
 
   return URL{
     url.Get("href").String(),
@@ -55,21 +55,21 @@ func make_url(request js.Value) URL {
     url.Get("search").String(),
     search_params,
     url.Get("hash").String(),
-  }
+  };
 }
 
 func make_dispatchable(key string, request js.Value) Dispatchable {
-  properties := make(map[string]interface{})
-  json.Unmarshal([]byte(request.Get(key).String()), &properties)
+  properties := make(map[string]interface{});
+  json.Unmarshal([]byte(request.Get(key).String()), &properties);
 
   return Dispatchable{
     func(property string) string {
-      return properties[property].(string)
+      return properties[property].(string);
     },
     func() map[string]interface{} {
-      return properties
+      return properties;
     },
-  }
+  };
 }
 
 func Redirect(location string, options map[string]interface{}) interface{} {
@@ -78,7 +78,7 @@ func Redirect(location string, options map[string]interface{}) interface{} {
       "handler": "redirect",
       "location": location,
       "options": options,
-    }
+    };
   });
 }
 
@@ -88,11 +88,10 @@ func View(component string, props map[string]interface{}) interface{} {
       "handler": "view",
       "component": component,
       "props": props,
-    }
+    };
   });
 }
 
- 
 func MakeRequest(route t_request) t_response {
   return func(this js.Value, args[] js.Value) interface{} {
     request := args[0];
@@ -103,8 +102,8 @@ func MakeRequest(route t_request) t_response {
       make_dispatchable("query", request),
       make_dispatchable("cookies", request),
       make_dispatchable("headers", request),
-    }
+    };
 
-    return route(go_request)
-  }
+    return route(go_request);
+  };
 }
