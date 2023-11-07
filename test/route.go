@@ -12,8 +12,14 @@ func Get(request Request) interface{} {
   //return map[string]interface{}{
   //  "test": 1234,
   //};
-  return request.Body.Get("foo")
-//  return primate.View("test", map[string]interface{}{});
+//  return request.Body.Get("foo")
+  return primate.View("test", map[string]interface{}{
+    "foo": "bar",
+    "bar": []string{"baz"},
+    "baz": []interface{}{
+      map[string]interface{}{"HO": "HI"},
+    },
+  });
 }
 
 // {{{ start primate wrapper, postfix

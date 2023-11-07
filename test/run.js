@@ -33,7 +33,7 @@ await WebAssembly.instantiate(typedArray, {
     const get = globalThis.Get;
     const response = make_response(get(make_request(fake_request(request))));
     //const $response = typeof response === "object" ? JSON.stringify(response) : response;
-    console.log(response);
+    console.log("T", response);
     return new Response(response);
   }, {host: "0.0.0.0", port: 6161});
 });
