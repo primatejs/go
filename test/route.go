@@ -5,7 +5,7 @@ import "syscall/js"
 
 import "github.com/primatejs/go/primate";
 
-func Get(request primate.Request) interface{} {
+func Get(request Request) interface{} {
   //return request.View("1test", map[string]interface{}{
   //  "test": 1234,
   //});
@@ -19,7 +19,7 @@ func Get(request primate.Request) interface{} {
 // {{{ start primate wrapper, postfix
 func main() {
   c := make(chan bool)
-  js.Global().Set("Get", js.FuncOf(primate.MakeRequest(Get)))
+  js.Global().Set("Get", js.FuncOf(make_request(Get)))
   <-c
 }
 // }}} end
