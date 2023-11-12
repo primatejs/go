@@ -5,7 +5,7 @@ import "encoding/json";
 import "fmt";
 
 func tryposition(array []map[string]any, position uint8) map[string]any {
-  if (len(array) < int(position)) {
+  if (len(array) <= int(position)) {
     return map[string]any{};
   }
   return array[position];
