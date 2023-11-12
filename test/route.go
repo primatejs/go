@@ -20,6 +20,7 @@ func Get(request Request) interface{} {
       map[string]interface{}{"HO": "HI"},
     },
   });
+  return primate.View("test");
 }
 
 // {{{ start primate wrapper, postfix

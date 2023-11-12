@@ -11,6 +11,9 @@ const typedArray = new Uint8Array(file);
 
 const getter = {
   get() {
+    return "bar";
+  },
+  getAll() {
     return {foo: "bar"};
   }
 }
@@ -33,7 +36,7 @@ await WebAssembly.instantiate(typedArray, {
     const get = globalThis.Get;
     const response = make_response(get(make_request(fake_request(request))));
     //const $response = typeof response === "object" ? JSON.stringify(response) : response;
-    console.log("T", response);
-    return new Response(response);
+    console.log("T", response, response());
+    return new Response(1);
   }, {host: "0.0.0.0", port: 6161});
 });
